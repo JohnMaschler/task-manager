@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class Task(db.Model):
+class Task(db.Model):#setting up the table for task fields
     __tablename__ = 'tasks'
 
     id = db.Column(db.Integer, primary_key=True) #get the columns and the type for each col
@@ -12,7 +12,7 @@ class Task(db.Model):
     due_date = db.Column(db.String(20))
     completed = db.Column(db.Boolean, default=False)
 
-    def to_dict(self):
+    def to_dict(self):#convert instance of Task to dictionary representation
         return {
             'id': self.id,
             'task_title': self.task_title,
@@ -21,10 +21,10 @@ class Task(db.Model):
             'completed': self.completed
         }
 
-class User(db.Model):
-    __tablename__ = 'users'
+# class User(db.Model):#didn't end up using this
+#     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key = True)
+#     id = db.Column(db.Integer, primary_key = True)
     
-    username = db.Column(db.String(20), nullable = False)
-    password = db.Column(db.String(128))
+#     username = db.Column(db.String(20), nullable = False)
+#     password = db.Column(db.String(128))

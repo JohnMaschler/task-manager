@@ -2,8 +2,8 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function App() {
-  const [tasks, setTasks] = useState([]);
+function App() {//state variables for managing form inputs and tasks
+  const [tasks, setTasks] = useState([]);//array to store tasks
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
@@ -15,28 +15,28 @@ function App() {
   //const [updatedCompletionStatus, setUpdatedCompletionStatus] = useState('');
 
 
-  useEffect(() => {
+  useEffect(() => { //fetch tasks from server on component mount
     fetchTasks();
   }, []);
 
-  function fetchTasks() {
+  function fetchTasks() { //function that fetches tasks from the server
     axios.get('/tasks')
       .then(response => {
         console.log('tasks:', response.data);
-        setTasks(response.data);
+        setTasks(response.data);//updates the tasks state
       });
   }
   
 
-  function handleCreateTask(event) {
+  function handleCreateTask(event) {//function to handle task creation
     event.preventDefault();
-    axios.post('/tasks', {
+    axios.post('/tasks', { //make post request to create new task
       task_title: newTaskTitle,
       description: newTaskDescription,
       due_date: newTaskDueDate,
       completion_status: newTaskCompletionStatus
     })
-      .then(() => {
+      .then(() => { //after it's created, clear the input fields
         setNewTaskTitle('');
         setNewTaskDescription('');
         setNewTaskDueDate('');
@@ -53,31 +53,25 @@ function App() {
       //completion_status: updatedCompletionStatus,
     };
     axios.put(`/tasks/${taskId}`, data)
-      .then(response => {
-        // handle successful response
+      .then(response => {// handle successful response
         console.log(response.data);
         fetchTasks(); // fetch updated list of tasks
         setEditingTaskId(null); // reset editing state
       })
-      .catch(error => {
-        // handle error
+      .catch(error => {// handle error
         console.error(error);
       });
   }
   
-  function handleEditClick(taskId) {
-    // find task by id
-    const task = tasks.find(task => task.id === taskId);
-    // set editing state
+  function handleEditClick(taskId) { 
+    const task = tasks.find(task => task.id === taskId);// find task by id
     setEditingTaskId(taskId);
-    // pre-populate input fields with current values
-    setUpdatedTaskTitle(task.task_title);
+    setUpdatedTaskTitle(task.task_title);// pre-populate input fields with current values
     setUpdatedDescription(task.description);
     setUpdatedDueDate(task.due_date);
   }
 
-  function handleCancelClick() {
-    // reset editing state
+  function handleCancelClick() {// reset editing state
     setEditingTaskId(null);
   }
 
@@ -88,19 +82,16 @@ function App() {
       });
   }
   function handleCompletionStatusChange(taskId, event) {
-    // Get the selected value
-    const value = event.target.value;
+    const value = event.target.value;    // Get the selected value
+
   
-    // Get the task form element
-    const taskForm = document.querySelector(`#task-form-${taskId}`);
+    
+    const taskForm = document.querySelector(`#task-form-${taskId}`);// Get the task form element
   
-    // Check if the selected value is "completed"
-    if (value === 'complete') {
-      // Change the background color of the task form to green
-      taskForm.style.backgroundColor = 'lightgreen';
+    if (value === 'complete') { // Check if the selected value is "completed"
+      taskForm.style.backgroundColor = 'lightgreen';//change it to green
     } else {
-      // Reset the background color of the task form
-      taskForm.style.backgroundColor = '';
+      taskForm.style.backgroundColor = '';//otherwise it's red
     }
   }
   
@@ -110,7 +101,7 @@ function App() {
 
   return (
     <div className = "form-container">
-      <form onSubmit={handleCreateTask}>
+      <form onSubmit={handleCreateTask}>{/* Form to create a new task */}
         <div>
           <label htmlFor="new-task-title">Title:</label>
           <input
@@ -152,11 +143,13 @@ function App() {
         </div>
         <button type="submit">Create Task</button>
       </form>
+      {/* Display existing tasks */}
       <div className="tasks-container">
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
             {editingTaskId === task.id ? (
+              /* in edit mode - display input fields for updating task */
               <>
                 <input type="text" value={updatedTaskTitle} onChange={event => setUpdatedTaskTitle(event.target.value)} />
                 <input type="text" value={updatedDescription} onChange={event => setUpdatedDescription(event.target.value)} />
